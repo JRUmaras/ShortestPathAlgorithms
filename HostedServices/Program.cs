@@ -1,7 +1,9 @@
-﻿using EasyNetQTools.Options;
+﻿using BruteForceSpaService.Options;
+using EasyNetQTools.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 
 namespace HostedServices
 {
@@ -20,7 +22,10 @@ namespace HostedServices
                 {
                     services
                         .AddHostedService<BruteForceSpaService.BruteForceSpaService>()
-                        .Configure<RabbitMqOptions>(hostBuilderContext.Configuration.GetRequiredSection(nameof(RabbitMqOptions)));
+                        .Configure<RabbitMqOptions>(hostBuilderContext.Configuration.GetRequiredSection(nameof(RabbitMqOptions)))
+                        .Configure<BruteForceSpaServiceOptions>(hostBuilderContext.Configuration.GetRequiredSection(nameof(BruteForceSpaServiceOptions)))
+                        .AddSingleton(sp => sp.GetRequiredService<IOptions<RabbitMqOptions>>().Value)
+                        .AddSingleton(sp => sp.GetRequiredService<IOptions<BruteForceSpaServiceOptions>>().Value);
                 })
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {

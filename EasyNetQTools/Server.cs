@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using EasyNetQ;
+using EasyNetQ.DI;
 using EasyNetQ.Internals;
-using EasyNetQTools.Options;
-using Microsoft.Extensions.Options;
+using EasyNetQTools.NamingConventions;
+using EasyNetQTools.NamingConventions.Models;
 
 namespace EasyNetQTools
 {
@@ -11,21 +13,25 @@ namespace EasyNetQTools
     public sealed class Server<TRequest, TResponse> : IDisposable
     {
         private readonly IBus _bus;
-        private const string _connString = "host=localhost;port=5672;virtualHost=/;username=server;password=server";
-        private readonly Func<TRequest, Task<TResponse>> _processor;
+        private readonly Func<TRequest, CancellationToken, Task<TResponse>> _processor;
+        private readonly CustomNaming? _customNaming;
         private AwaitableDisposable<IDisposable> _responder;
         private bool _disposed;
 
-        public Server(Func<TRequest, Task<TResponse>> processor, IOptions<RabbitMqOptions> rabbitMqConfigOptions)
+        public Server(Func<TRequest, CancellationToken, Task<TResponse>> processor, string connString, CustomNaming? customNaming = null)
         {
-            _bus = RabbitHutch.CreateBus(rabbitMqConfigOptions.Value.ConnString);
+            _bus = customNaming is null 
+                ? RabbitHutch.CreateBus(connString) 
+                : RabbitHutch.CreateBus(connString, CustomNamingConvention.CreateRegistrationAction(customNaming.Value));
+
             _processor = processor;
+            _customNaming = customNaming;
         }
 
         public void Start()
         {
             ThrowIfDisposed();
-            _responder = _bus.Rpc.RespondAsync(_processor);
+            _responder = _bus.Rpc.RespondAsync<TRequest, TResponse>(request => _processor(request, CancellationToken.None));
         }
 
         public async Task StopAsync()
@@ -34,6 +40,13 @@ namespace EasyNetQTools
             if (_responder.AsTask() is null) return;
             (await _responder).Dispose();
         }
+        
+        public void Dispose()
+        {
+            if (_disposed) return;
+            _bus.Dispose();
+            _disposed = true;
+        }
 
         private void ThrowIfDisposed()
         {
@@ -41,13 +54,6 @@ namespace EasyNetQTools
             
             const string msg = $"{nameof(Server<TRequest, TResponse>)} has already been disposed.";
             throw new ObjectDisposedException(msg);
-        }
-
-        public void Dispose()
-        {
-            if (_disposed) return;
-            _bus.Dispose();
-            _disposed = true;
         }
     }
 }

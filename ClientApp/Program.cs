@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BruteForceSpaService;
 using EasyNetQTools;
+using EasyNetQTools.NamingConventions.Models;
 using ShortestPathAlgorithms.Models;
 
 namespace ClientApp
@@ -11,7 +12,13 @@ namespace ClientApp
     {
         private static async Task Main()
         {
-            var client = new Client<Request, Response>();
+            var customNaming = new CustomNaming
+            {
+                ExchangeName = "bruteforce.exchange",
+                RequestQueueName = "bruteforce.queue",
+            };
+            
+            var client = new Client<Request, Response>(customNaming);
 
             var request = CreateRequest();
 

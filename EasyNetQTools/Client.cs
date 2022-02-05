@@ -1,16 +1,21 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using EasyNetQ;
+using EasyNetQTools.NamingConventions;
+using EasyNetQTools.NamingConventions.Models;
 
 namespace EasyNetQTools;
 
-public class Client<TRequest, TResponse>
+public class Client<TRequest, TResponse> : IDisposable
 {
     private readonly IBus _bus;
-    private const string _connString = "host=localhost;port=5672;virtualHost=/;username=client;password=client";
+    private const string _connString = "host=localhost;port=5672;virtualHost=/;username=guest;password=guest";
 
-    public Client()
+    public Client(CustomNaming? customNaming)
     {
-        _bus = RabbitHutch.CreateBus(_connString);
+        _bus = customNaming is null 
+            ? RabbitHutch.CreateBus(_connString) 
+            : RabbitHutch.CreateBus(_connString, CustomNamingConvention.CreateRegistrationAction(customNaming.Value));
     }
 
     public async Task<TResponse> MakeRequestAsync(TRequest request) 

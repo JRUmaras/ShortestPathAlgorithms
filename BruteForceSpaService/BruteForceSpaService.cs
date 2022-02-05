@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using BruteForceSpaService.Options;
 using EasyNetQTools;
+using EasyNetQTools.NamingConventions.Models;
 using EasyNetQTools.Options;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using ShortestPathAlgorithms.Algorithms;
 
 namespace BruteForceSpaService
@@ -13,17 +14,15 @@ namespace BruteForceSpaService
     {
         private readonly Server<Request, Response> _server;
 
-        public BruteForceSpaService(IOptions<RabbitMqOptions> rabbitMqConfigOptions)
+        public BruteForceSpaService(RabbitMqOptions rabbitMqOptions, BruteForceSpaServiceOptions bruteForceSpaServiceOptions)
         {
-            _server = new Server<Request, Response>(request
-                => Task.Run(() =>
-                {
-                    var path = DepthFirstBruteForce.FindShortestPath(request.Graph, request.Start, request.End);
-                    return new Response
-                    {
-                        Path = path
-                    };
-                }), rabbitMqConfigOptions);
+            var customNaming = new CustomNaming
+            {
+                ExchangeName = bruteForceSpaServiceOptions.ExchangeName,
+                RequestQueueName = bruteForceSpaServiceOptions.RequestQueueName,
+            };
+            
+            _server = new Server<Request, Response>(Processor, rabbitMqOptions.ConnString, customNaming);
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -35,6 +34,18 @@ namespace BruteForceSpaService
         public void Dispose()
         {
             _server.Dispose();
+        }
+
+        private static Task<Response> Processor(Request request, CancellationToken ct)
+        {
+            return Task.Run(() =>
+            {
+                var path = DepthFirstBruteForce.FindShortestPath(request.Graph, request.Start, request.End);
+                return new Response
+                {
+                    Path = path
+                };
+            }, ct);
         }
     }
 }
