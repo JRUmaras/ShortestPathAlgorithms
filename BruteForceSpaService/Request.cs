@@ -4,7 +4,7 @@ namespace BruteForceSpaService
 {
     public class Request
     {
-        public UndirectedGraph Graph { get; set; }
+        public GraphUndirected Graph { get; set; }
         
         public Node Start { get; set; }
         

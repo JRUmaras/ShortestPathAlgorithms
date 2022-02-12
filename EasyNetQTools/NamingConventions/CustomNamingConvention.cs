@@ -16,7 +16,7 @@ public class CustomNamingConvention : Conventions
         RpcRoutingKeyNamingConvention = _ => naming.RequestQueueName;
     }
     
-    public static Action<IServiceRegister> CreateRegistrationAction(CustomNaming customNaming) =>
-        services => services.Register<IConventions>(serviceResolver => 
-            new CustomNamingConvention(serviceResolver.Resolve<ITypeNameSerializer>(), customNaming));
+    public static Action<IServiceRegister> CreateRegistrationAction(CustomNaming customNaming) 
+        => services => services.Register<IConventions>(serviceResolver 
+            => new CustomNamingConvention(serviceResolver.Resolve<ITypeNameSerializer>(), customNaming));
 }

@@ -3,19 +3,19 @@ using System.Linq;
 
 namespace ShortestPathAlgorithms.Models;
 
-public class UndirectedGraph
+public class GraphUndirected
 {
     public Node[] Nodes { get; set; }
     
     public Edge[] Edges { get; set; }
 
-    public List<Edge> FindEdgesOfNode(Node node) =>
-        Edges
+    public List<Edge> FindEdgesOfNode(Node node) 
+        => Edges
             .Where(edge => edge.Node1.Id == node.Id || edge.Node2.Id == node.Id)
             .ToList();
 
-    public List<Node> FindNeighbourNodes(Node node) =>
-        Edges
+    public List<Node> FindNeighbourNodes(Node node) 
+        => Edges
             .Where(edge => edge.HasNode(node))
             .Select(edge => edge.Node1.Id == node.Id ? edge.Node2 : edge.Node1)
             .ToList();

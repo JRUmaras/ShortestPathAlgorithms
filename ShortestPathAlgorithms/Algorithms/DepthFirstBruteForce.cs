@@ -6,7 +6,7 @@ namespace ShortestPathAlgorithms.Algorithms;
 
 public static class DepthFirstBruteForce
 {
-    public static Path FindShortestPath(UndirectedGraph graph, Node start, Node end)
+    public static Path FindShortestPath(GraphUndirected graph, Node start, Node end)
     {
         var currentPath = new Stack<Node>();
         currentPath.Push(start);

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace ShortestPathAlgorithms.Models;
 
@@ -10,7 +11,7 @@ public class Path
 
     public Path(IEnumerable<Node> nodes, int distance)
     {
-        Nodes = new List<Node>(nodes);
+        Nodes = nodes as List<Node> ?? nodes.ToList();
         Distance = distance;
     }
 }

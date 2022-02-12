@@ -23,9 +23,9 @@ public class BruteForceAlgorithmTests
         Assert.True(path.Nodes.Select(n => n.Id).SequenceEqual(new [] {"7", "3", "2", "4", "6"}));
     }
 
-    private static UndirectedGraph CreateBasicGraph()
+    private static GraphUndirected CreateBasicGraph()
     {
-        var graph = new UndirectedGraph
+        var graph = new GraphUndirected
         {
             Nodes = new[]
             {

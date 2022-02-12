@@ -55,9 +55,9 @@ namespace ClientApp
             };
         }
 
-        private static UndirectedGraph CreateBasicGraph()
+        private static GraphUndirected CreateBasicGraph()
         {
-            var graph = new UndirectedGraph
+            var graph = new GraphUndirected
             {
                 Nodes = new[]
                 {
