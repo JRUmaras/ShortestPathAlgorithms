@@ -13,6 +13,7 @@ namespace BruteForceSpaService
     public class BruteForceSpaService : IHostedService, IDisposable
     {
         private readonly Server<Request, Response> _server;
+        private Task? _startupTask;
 
         public BruteForceSpaService(RabbitMqOptions rabbitMqOptions, BruteForceSpaServiceOptions bruteForceSpaServiceOptions)
         {
@@ -26,11 +27,21 @@ namespace BruteForceSpaService
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
-            => Task.Run(() => _server.Start(), cancellationToken);
+        {
+             _startupTask = Task.Run(() => _server.Start(), cancellationToken);
+
+            return _startupTask.IsCompleted
+                ? _startupTask
+                : Task.CompletedTask;
+        }
 
         public async Task StopAsync(CancellationToken cancellationToken)
-            => await _server.StopAsync();
-
+        {
+            if (_startupTask != null)  await _startupTask;
+            
+            await _server.StopAsync();
+        }
+        
         public void Dispose()
         {
             _server.Dispose();
