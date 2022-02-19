@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ShortestPathAlgorithms.Models;
+namespace Graphs.Models;
 
 public class GraphDirected
 {

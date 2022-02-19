@@ -7,8 +7,4 @@
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\Graphs\Graphs.csproj" />
-    </ItemGroup>
-
 </Project>

@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using EasyNetQ;
-using EasyNetQ.DI;
 using EasyNetQ.Internals;
 using EasyNetQTools.NamingConventions;
 using EasyNetQTools.NamingConventions.Models;

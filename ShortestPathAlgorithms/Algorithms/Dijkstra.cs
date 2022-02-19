@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ShortestPathAlgorithms.Models;
+using Graphs.Models;
 using ShortestPathAlgorithms.Helpers;
+using Path = ShortestPathAlgorithms.Models.Path;
 
 namespace ShortestPathAlgorithms.Algorithms;
 

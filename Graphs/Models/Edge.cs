@@ -1,4 +1,4 @@
-﻿namespace ShortestPathAlgorithms.Models;
+﻿namespace Graphs.Models;
 
 public struct Edge
 {

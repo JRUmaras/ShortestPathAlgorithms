@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ShortestPathAlgorithms.Models;
+namespace Graphs.Models;
 
 public class EdgeDirected
 {
