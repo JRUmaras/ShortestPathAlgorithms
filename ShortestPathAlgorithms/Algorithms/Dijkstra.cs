@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Graphs.Models;
-using ShortestPathAlgorithms.Helpers;
 using Path = ShortestPathAlgorithms.Models.Path;
+using PriorityQueue = ShortestPathAlgorithms.Helpers.PriorityQueue<Graphs.Models.Node, int>;
 
 namespace ShortestPathAlgorithms.Algorithms;
 
@@ -14,7 +14,7 @@ public static class Dijkstra
         var initialPriorities = graph
             .Nodes
             .Select(node => node == from ? (node, 0) : (node, int.MaxValue));
-        var nodesToExplore = new PriorityQueue<Node, int>(initialPriorities);
+        var nodesToExplore = new PriorityQueue(initialPriorities);
 
         var result = Search(nodesToExplore, graph.FindOutgoingEdgesOfNode);
 
@@ -24,7 +24,7 @@ public static class Dijkstra
     }
 
     private static Dictionary<Node, (Node? parent, int distance)> Search(
-        PriorityQueue<Node, int> exploreQueue, 
+        PriorityQueue exploreQueue, 
         Func<Node, IEnumerable<EdgeDirected>> getNodeEdges)
     {
         var visitedNodes = new Dictionary<Node, (Node? parent, int distance)>();
