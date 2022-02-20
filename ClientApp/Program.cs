@@ -5,8 +5,6 @@ using BruteForceSpaService;
 using EasyNetQTools;
 using EasyNetQTools.NamingConventions.Models;
 using Graphs.Factories;
-using Graphs.Models;
-using ShortestPathAlgorithms.Models;
 
 namespace ClientApp
 {
@@ -48,13 +46,8 @@ namespace ClientApp
             var graph = DirectedGraphFactory.CreateBasicGraph();
             var startNode = graph.Nodes.First(n => n.Id == "7");
             var endNode = graph.Nodes.First(n => n.Id == "6");
-            
-            return new Request
-            {
-                Graph = graph,
-                Start = startNode,
-                End = endNode
-            };
+
+            return new Request(graph, startNode, endNode);
         }
     }
 }

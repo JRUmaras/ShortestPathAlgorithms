@@ -7,7 +7,7 @@ namespace EasyNetQTools.NamingConventions;
 
 public class CustomNamingConvention : Conventions
 {
-    public CustomNamingConvention(ITypeNameSerializer typeNameSerializer, CustomNaming naming) 
+    private CustomNamingConvention(ITypeNameSerializer typeNameSerializer, CustomNaming naming) 
         : base(typeNameSerializer)
     {
         RpcRequestExchangeNamingConvention = _ => naming.ExchangeName;

@@ -25,9 +25,7 @@ namespace HostedServices
                     services
                         .AddHostedService<BruteForceSpaService.BruteForceSpaService>()
                         .Configure<RabbitMqOptions>(hostBuilderContext.Configuration.GetRequiredSection(nameof(RabbitMqOptions)))
-                        .Configure<BruteForceSpaServiceOptions>(hostBuilderContext.Configuration.GetRequiredSection(nameof(BruteForceSpaServiceOptions)))
-                        .AddSingleton(sp => sp.GetRequiredService<IOptions<RabbitMqOptions>>().Value)
-                        .AddSingleton(sp => sp.GetRequiredService<IOptions<BruteForceSpaServiceOptions>>().Value);
+                        .Configure<BruteForceSpaServiceOptions>(hostBuilderContext.Configuration.GetRequiredSection(nameof(BruteForceSpaServiceOptions)));
                 })
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {

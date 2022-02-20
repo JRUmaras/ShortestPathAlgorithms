@@ -5,9 +5,15 @@ namespace Graphs.Models;
 
 public class GraphUndirected
 {
-    public Node[] Nodes { get; set; }
+    public Node[] Nodes { get; }
     
-    public Edge[] Edges { get; set; }
+    public Edge[] Edges { get; }
+    
+    public GraphUndirected(IEnumerable<Node> nodes, IEnumerable<Edge> edges)
+    {
+        Nodes = nodes as Node[] ?? nodes.ToArray();
+        Edges = edges as Edge[] ?? edges.ToArray();
+    }
 
     public List<Edge> FindEdgesOfNode(Node node) 
         => Edges

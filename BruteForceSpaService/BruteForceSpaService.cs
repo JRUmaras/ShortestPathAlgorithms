@@ -6,21 +6,22 @@ using EasyNetQTools;
 using EasyNetQTools.NamingConventions.Models;
 using EasyNetQTools.Options;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using ShortestPathAlgorithms.Algorithms;
 
 namespace BruteForceSpaService
 {
-    public class BruteForceSpaService : IHostedService, IDisposable
+    public sealed class BruteForceSpaService : IHostedService, IDisposable
     {
         private readonly Server<Request, Response> _server;
         private Task? _startupTask;
 
-        public BruteForceSpaService(RabbitMqOptions rabbitMqOptions, BruteForceSpaServiceOptions bruteForceSpaServiceOptions)
+        public BruteForceSpaService(RabbitMqOptions rabbitMqOptions, IOptions<BruteForceSpaServiceOptions> bruteForceSpaServiceOptions)
         {
             var customNaming = new CustomNaming
             {
-                ExchangeName = bruteForceSpaServiceOptions.ExchangeName,
-                RequestQueueName = bruteForceSpaServiceOptions.RequestQueueName,
+                ExchangeName = bruteForceSpaServiceOptions.Value.ExchangeName,
+                RequestQueueName = bruteForceSpaServiceOptions.Value.RequestQueueName,
             };
             
             _server = new Server<Request, Response>(Processor, rabbitMqOptions.ConnString, customNaming);
@@ -37,7 +38,7 @@ namespace BruteForceSpaService
 
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            if (_startupTask != null)  await _startupTask;
+            if (_startupTask is not null)  await _startupTask;
             
             await _server.StopAsync();
         }
@@ -52,10 +53,7 @@ namespace BruteForceSpaService
             return Task.Run(() =>
             {
                 var path = DepthFirstBruteForce.FindShortestPath(request.Graph, request.Start, request.End);
-                return new Response
-                {
-                    Path = path
-                };
+                return new Response(path);
             }, ct);
         }
     }

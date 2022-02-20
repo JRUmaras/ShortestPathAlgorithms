@@ -2,5 +2,5 @@
 
 public class RabbitMqOptions
 {
-    public string ConnString { get; set; }
+    public string ConnString { get; set; } = "";
 }

@@ -4,6 +4,11 @@ namespace BruteForceSpaService
 {
     public class Response
     {
-        public Path Path { get; set; }
+        public Path Path { get; }
+
+        public Response(Path path)
+        {
+            Path = path;
+        }
     }
 }
