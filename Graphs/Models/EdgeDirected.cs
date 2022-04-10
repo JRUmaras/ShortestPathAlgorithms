@@ -1,20 +1,21 @@
 ﻿using System;
+using Graphs.Interfaces;
 
 namespace Graphs.Models;
 
-public class EdgeDirected
+public class EdgeDirected : IWeightedEdgeDirected
 {
     private readonly Lazy<string> _id;
 
     public string Id => _id.Value;
     
-    public Node From { get; }
+    public INode From { get; }
     
-    public Node To { get; }
+    public INode To { get; }
     
     public int Weight { get; }
 
-    public EdgeDirected(Node from, Node to, int weight)
+    public EdgeDirected(INode from, INode to, int weight)
     {
         From = from;
         To = to;

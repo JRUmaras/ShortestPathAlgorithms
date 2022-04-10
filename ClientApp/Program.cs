@@ -5,6 +5,7 @@ using BruteForceSpaService;
 using EasyNetQTools;
 using EasyNetQTools.NamingConventions.Models;
 using Graphs.Factories;
+using Graphs.Models;
 
 namespace ClientApp
 {
@@ -28,7 +29,7 @@ namespace ClientApp
                 try
                 {
                     var response = await client.MakeRequestAsync(request);
-                    Console.WriteLine(response.Path.Distance);
+                    Console.WriteLine(response.Path.Cost);
                 }
                 catch (TaskCanceledException)
                 {
@@ -47,7 +48,7 @@ namespace ClientApp
             var startNode = graph.Nodes.First(n => n.Id == "7");
             var endNode = graph.Nodes.First(n => n.Id == "6");
 
-            return new Request(graph, startNode, endNode);
+            return new Request(graph, (Node)startNode, (Node)endNode);
         }
     }
 }

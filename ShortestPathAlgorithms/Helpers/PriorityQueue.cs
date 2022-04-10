@@ -72,7 +72,7 @@ public class PriorityQueue<TElement, TPriority>
         
         foreach (var (element, priority) in _priorityDict)
         {
-            if (priority.CompareTo(_nextToDequeue.Value.Value) < 0)
+            if (priority.CompareTo(_nextToDequeue!.Value.Value) < 0)
             {
                 _nextToDequeue = new KeyValuePair<TElement, TPriority>(element, priority);
             }

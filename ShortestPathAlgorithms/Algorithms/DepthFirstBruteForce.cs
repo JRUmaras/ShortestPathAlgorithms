@@ -1,20 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Graphs.Interfaces;
 using Graphs.Models;
-using Path = ShortestPathAlgorithms.Models.Path;
+using ShortestPathAlgorithms.Models;
 
 namespace ShortestPathAlgorithms.Algorithms;
 
 public static class DepthFirstBruteForce
 {
-    public static Path FindShortestPath(GraphDirected graph, Node start, Node end)
+    public static Path<int> FindShortestPath(GraphDirected graph, INode start, INode end)
     {
-        var currentPath = new Stack<Node>();
+        var currentPath = new Stack<INode>();
         currentPath.Push(start);
 
-        var paths = new List<Path>();
+        var paths = new List<Path<int>>();
 
-        var edgeStack = new Stack<EdgeDirected>(graph.FindOutgoingEdgesOfNode(start));
+        var edgeStack = new Stack<IWeightedEdgeDirected>(graph.FindOutgoingEdgesOfNode(start));
 
         while (edgeStack.Count > 0)
         {
@@ -39,7 +40,7 @@ public static class DepthFirstBruteForce
                         .First(e => e.From == trail[index] && e.To == trail[index + 1])
                         .Weight;
                 }
-                paths.Add(new Path(trail, weight));
+                paths.Add(new Path<int>(trail, weight));
                 currentPath.Pop();
                 continue;
             }
@@ -51,6 +52,6 @@ public static class DepthFirstBruteForce
                 .ForEach(e => edgeStack.Push(e));
         }
 
-        return paths.OrderBy(p => p.Distance).First();
+        return paths.OrderBy(p => p.Cost).First();
     }
 }

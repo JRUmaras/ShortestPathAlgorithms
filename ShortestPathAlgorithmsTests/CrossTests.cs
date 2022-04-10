@@ -20,8 +20,8 @@ public class CrossTests
         // Act
         foreach (var (start, end) in startEndNodePairs)
         {
-            distancesBruteForce.Add(DepthFirstBruteForce.FindShortestPath(graph, start, end).Distance);
-            distancesDijkstra.Add(Dijkstra.Find(graph, start, end).Distance);
+            distancesBruteForce.Add(DepthFirstBruteForce.FindShortestPath(graph, start, end).Cost);
+            distancesDijkstra.Add(Dijkstra.Find(graph, start, end).Cost);
         }
         
         // Assert

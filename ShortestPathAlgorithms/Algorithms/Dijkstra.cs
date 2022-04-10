@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Graphs.Interfaces;
 using Graphs.Models;
-using Path = ShortestPathAlgorithms.Models.Path;
-using PriorityQueue = ShortestPathAlgorithms.Helpers.PriorityQueue<Graphs.Models.Node, int>;
+using ShortestPathAlgorithms.Models;
+using PriorityQueue = ShortestPathAlgorithms.Helpers.PriorityQueue<Graphs.Interfaces.INode, int>;
 
 namespace ShortestPathAlgorithms.Algorithms;
 
 public static class Dijkstra
 {
-    public static Path Find(GraphDirected graph, Node from, Node to)
+    public static Path<int> Find(GraphDirected graph, INode from, INode to)
     {
         var initialPriorities = graph
             .Nodes
-            .Select(node => node == from ? (node, 0) : (node, int.MaxValue));
+            .Select(node => node.Equals(from) ? (node, 0) : (node, int.MaxValue));
         var nodesToExplore = new PriorityQueue(initialPriorities);
 
         var result = Search(nodesToExplore, graph.FindOutgoingEdgesOfNode);
@@ -23,12 +24,12 @@ public static class Dijkstra
         return path;
     }
 
-    private static Dictionary<Node, (Node? parent, int distance)> Search(
+    private static Dictionary<INode, (INode? parent, int distance)> Search(
         PriorityQueue exploreQueue, 
-        Func<Node, IEnumerable<EdgeDirected>> getNodeEdges)
+        Func<INode, IEnumerable<IWeightedEdgeDirected>> getNodeEdges)
     {
-        var visitedNodes = new Dictionary<Node, (Node? parent, int distance)>();
-        var childToParentMap = new Dictionary<Node, Node>();
+        var visitedNodes = new Dictionary<INode, (INode? parent, int distance)>();
+        var childToParentMap = new Dictionary<INode, INode>();
 
         while (!exploreQueue.IsEmpty)
         {
@@ -57,9 +58,9 @@ public static class Dijkstra
         return visitedNodes;
     }
     
-    private static Path Backtrack(Node endNode, IReadOnlyDictionary<Node, (Node? Parent, int Distance)> pathTable)
+    private static Path<int> Backtrack(INode endNode, IReadOnlyDictionary<INode, (INode? Parent, int Distance)> pathTable)
     {
-        var path = new Stack<Node>();
+        var path = new Stack<INode>();
         var currentNode = endNode;
         do
         {
@@ -67,6 +68,6 @@ public static class Dijkstra
             currentNode = pathTable[currentNode].Parent;
         } while (currentNode is not null);
 
-        return new Path(path, pathTable[endNode].Distance);
+        return new Path<int>(path, pathTable[endNode].Distance);
     }
 }

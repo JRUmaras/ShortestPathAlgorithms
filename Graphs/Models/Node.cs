@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Graphs.Interfaces;
 
 namespace Graphs.Models;
 
-public class Node : IEquatable<Node>
+public class Node : INode
 {
     public string Id { get; }
 
@@ -11,13 +11,13 @@ public class Node : IEquatable<Node>
         Id = id;
     }
 
-    public bool Equals(Node? other) => Id == other?.Id;
+    public bool Equals(INode? other) => Id == other?.Id;
 
-    public override bool Equals(object? obj) => obj is Node other && Equals(other);
+    public override bool Equals(object? obj) => obj is INode other && Equals(other);
 
     public override int GetHashCode() => Id.GetHashCode();
 
     public static bool operator ==(Node node1, Node node2) => node1.Equals(node2);
-
+    
     public static bool operator !=(Node node1, Node node2) => !(node1 == node2);
 }

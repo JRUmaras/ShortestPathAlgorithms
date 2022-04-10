@@ -1,18 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Graphs.Models;
+using Graphs.Interfaces;
 
 namespace ShortestPathAlgorithms.Models;
 
-public class Path
+public class Path<TCost>
 {
-    public List<Node> Nodes { get; }
+    public List<INode> Nodes { get; }
 
-    public int Distance { get; }
+    public TCost Cost { get; }
 
-    public Path(IEnumerable<Node> nodes, int distance)
+    public Path(IEnumerable<INode> nodes, TCost distance)
     {
-        Nodes = nodes as List<Node> ?? nodes.ToList();
-        Distance = distance;
+        Nodes = nodes as List<INode> ?? nodes.ToList();
+        Cost = distance;
     }
 }

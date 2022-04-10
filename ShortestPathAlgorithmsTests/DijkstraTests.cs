@@ -19,7 +19,7 @@ public class DijkstraTests
         var path = Dijkstra.Find(graph, startNode, endNode);
         
         // Assert
-        Assert.Equal(4, path.Distance);
+        Assert.Equal(4, path.Cost);
         Assert.True(path.Nodes.Select(n => n.Id).SequenceEqual(new [] {"7", "3", "2", "4", "6"}));
     }
 }
