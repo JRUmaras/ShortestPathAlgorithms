@@ -10,9 +10,13 @@ using PriorityQueue = ShortestPathAlgorithms.Helpers.PriorityQueue<Graphs.Interf
 
 namespace ShortestPathAlgorithms.Algorithms;
 
-public static class Dijkstra2
+public static class DijkstraDynamic
 {
-    public static Path<double> Find(GraphDirected2 graph, INode from, INode to, ICostCalculator<double> costCalculator, IState startState)
+    // TODO
+    // * What if graph is not connected? We start at source node, explore sub-graph, and then we dequeue the next node from another sub-graph, but that seems wrong because that part of graph can't be reached from the source
+    // * Compare DijkstraDynamic and Dijkstra. DijkstraDynamic is more generic, should be possible to process test cases of Dijkstra. Apply Unit tests of Dijkstra to DijkstraDynamic
+
+    public static Path<double> Find(GraphDirected graph, INode from, INode to, ICostCalculator<double> costCalculator, IState startState)
     {
         var initialPriorities = graph
             .Nodes
@@ -26,7 +30,7 @@ public static class Dijkstra2
         return path;
     }
 
-    private static Dictionary<INode, (INode? parent, double distance)> Search(PriorityQueue exploreQueue, GraphDirected2 graph, ICostCalculator<double> costCalculator, IState state)
+    private static Dictionary<INode, (INode? parent, double distance)> Search(PriorityQueue exploreQueue, GraphDirected graph, ICostCalculator<double> costCalculator, IState startState)
     {
         var visitedNodes = new Dictionary<INode, (INode? Parent, double Cost)>();
         var childToParentMap = new Dictionary<INode, INode>();
@@ -36,7 +40,10 @@ public static class Dijkstra2
         {
             // Step to the node with shortest distance
             var (currentNode, costAccumulated) = exploreQueue.Pop() ?? throw new NullReferenceException("No nodes were found in the priority queue.");
-            state = stateCache[currentNode];
+            if (!stateCache.TryGetValue(currentNode, out var state))
+            {
+                state = startState;
+            }
             
             // Explore neighbours
             var edges = graph.FindOutgoingEdgesOfNode(currentNode);

@@ -1,7 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Graphs.Factories;
+using Graphs.Interfaces;
+using Moq;
 using ShortestPathAlgorithms.Algorithms;
+using ShortestPathAlgorithms.CostCalculators.Interfaces;
+using ShortestPathAlgorithms.Interfaces;
+using ShortestPathAlgorithms.Models;
 using Xunit;
 
 namespace ShortestPathAlgorithmsTests;
@@ -9,10 +15,10 @@ namespace ShortestPathAlgorithmsTests;
 public class CrossTests
 {
     [Fact]
-    public void BasicGraphTest()
+    public void DijkstraVsDepthFirstBruteForce_BasicGraphTest()
     {
         // Arrange
-        var graph = DirectedGraphFactory.CreateBasicGraph();
+        var graph = DirectedGraphFactory.CreateBasicGraphWeighted();
         var startEndNodePairs = GetAllPossiblePairs(graph.Nodes);
         var distancesBruteForce = new List<int>(startEndNodePairs.Count);
         var distancesDijkstra = new List<int>(startEndNodePairs.Count);
@@ -26,6 +32,51 @@ public class CrossTests
         
         // Assert
         Assert.Equal(distancesDijkstra, distancesBruteForce);
+    }
+
+    [Fact]
+    public void DijkstraDynamicVsDepthFirstBruteForceDynamic_BasicGraphTest()
+    {
+        // Arrange
+        var graph = DirectedGraphFactory.CreateBasicGraph();
+        var startEndNodePairs = GetAllPossiblePairs(graph.Nodes);
+
+        var distancesBruteForce = new List<double>(startEndNodePairs.Count);
+        var distancesDijkstra = new List<double>(startEndNodePairs.Count);
+        var diffs = new List<double>(startEndNodePairs.Count);
+        
+        var costCalculatorMock = new Mock<ICostCalculator<double>>();
+        costCalculatorMock
+            .Setup(x => x.Calculate(It.IsAny<IEdgeDirected>(), It.IsAny<IState>()))
+            .Returns<IEdgeDirected, IState>((edge, state) =>
+            {
+                var cost = edge.From.Id.GetHashCode() / (double)int.MaxValue * state.Time.Hour + edge.To.Id.GetHashCode() / (double)int.MaxValue;
+                cost = Math.Abs(cost);
+                var newState = new State { Time = state.Time.AddHours(cost) };
+                return (cost, newState);
+            });
+        
+        static IState InitStartState() => new State { Time = DateTime.UtcNow.Date };
+
+        // Act
+        foreach (var (start, end) in startEndNodePairs)
+        {
+            distancesBruteForce.Add(DepthFirstBruteForceDynamic.Find(graph, start, end, costCalculatorMock.Object, InitStartState()).Cost);
+            distancesDijkstra.Add(DijkstraDynamic.Find(graph, start, end, costCalculatorMock.Object, InitStartState()).Cost);
+        }
+
+        for (var idx = 0; idx < startEndNodePairs.Count; idx++)
+        {
+            var diff = distancesBruteForce[idx] == distancesDijkstra[idx]
+                ? 0
+                : Math.Abs((distancesDijkstra[idx] - distancesBruteForce[idx]) / distancesBruteForce[idx]);
+            diffs.Add(diff);
+        }
+        
+        // Assert
+        Assert.True(distancesDijkstra.All(d => d >= 0));
+        Assert.True(distancesBruteForce.All(d => d >= 0));
+        Assert.True(diffs.All(delta => delta < 1e-15));
     }
 
     private static IList<(T, T)> GetAllPossiblePairs<T>(IList<T> items)

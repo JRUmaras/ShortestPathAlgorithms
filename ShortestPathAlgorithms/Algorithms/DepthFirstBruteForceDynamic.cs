@@ -2,20 +2,22 @@
 using System.Linq;
 using Graphs.Interfaces;
 using Graphs.Models;
+using ShortestPathAlgorithms.CostCalculators.Interfaces;
+using ShortestPathAlgorithms.Interfaces;
 using ShortestPathAlgorithms.Models;
 
 namespace ShortestPathAlgorithms.Algorithms;
 
-public static class DepthFirstBruteForce
+public static class DepthFirstBruteForceDynamic
 {
-    public static Path<int> FindShortestPath(GraphDirectedWeighted graph, INode start, INode end)
+    public static Path<double> Find(GraphDirected graph, INode start, INode end, ICostCalculator<double> costCalculator, IState startState)
     {
         var currentPath = new Stack<INode>();
         currentPath.Push(start);
 
-        var paths = new List<Path<int>>();
+        var paths = new List<Path<double>>();
 
-        var edgeStack = new Stack<IWeightedEdgeDirected>(graph.FindOutgoingEdgesOfNode(start));
+        var edgeStack = new Stack<IEdgeDirected>(graph.FindOutgoingEdgesOfNode(start));
 
         while (edgeStack.Count > 0)
         {
@@ -33,14 +35,18 @@ public static class DepthFirstBruteForce
             {
                 var trail = currentPath.Reverse().ToList();
 
-                var weight = 0;
+                var weight = 0d;
+                var state = startState;
                 for (var index = 0; index < trail.Count - 1; index++)
                 {
-                    weight += graph.Edges
-                        .First(e => e.From == trail[index] && e.To == trail[index + 1])
-                        .Weight;
+                    var nextEdge = graph.Edges
+                        .First(e => e.From == trail[index] && e.To == trail[index + 1]);
+                    
+                    var (stepCost, newState) = costCalculator.Calculate(nextEdge, state);
+                    state = newState;
+                    weight += stepCost;
                 }
-                paths.Add(new Path<int>(trail, weight));
+                paths.Add(new Path<double>(trail, weight));
                 currentPath.Pop();
                 continue;
             }

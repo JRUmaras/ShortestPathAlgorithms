@@ -9,19 +9,19 @@ public class GraphDirected
 {
     private readonly Lazy<INode[]> _nodes;
 
-    public IWeightedEdgeDirected[] Edges { get; }
+    public IEdgeDirected[] Edges { get; }
 
     public INode[] Nodes => _nodes.Value;
 
-    public GraphDirected(IEnumerable<IWeightedEdgeDirected> edges)
+    public GraphDirected(IEnumerable<IEdgeDirected> edges)
     {
         if (edges is null) throw new ArgumentNullException($"Argument {nameof(edges)} cannot be null.");
         
-        Edges = edges as IWeightedEdgeDirected[] ?? edges.ToArray();
+        Edges = edges as EdgeDirected[] ?? edges.ToArray();
         _nodes = new Lazy<INode[]>(GetNodes);
     }
 
-    public IEnumerable<IWeightedEdgeDirected> FindOutgoingEdgesOfNode(INode node) 
+    public IEnumerable<IEdgeDirected> FindOutgoingEdgesOfNode(INode node) 
         => Edges.Where(e => e.From.Id == node.Id);
 
     private INode[] GetNodes()

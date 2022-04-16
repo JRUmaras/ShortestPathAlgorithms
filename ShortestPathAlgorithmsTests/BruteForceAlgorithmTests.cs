@@ -11,7 +11,7 @@ public class BruteForceAlgorithmTests
     public void BasicTest()
     {
         // Arrange
-        var graph = DirectedGraphFactory.CreateBasicGraph();
+        var graph = DirectedGraphFactory.CreateBasicGraphWeighted();
 
         // Act
         var startNode = graph.Nodes.First(n => n.Id == "7");

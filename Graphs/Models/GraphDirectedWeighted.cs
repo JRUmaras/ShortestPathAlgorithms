@@ -5,23 +5,23 @@ using Graphs.Interfaces;
 
 namespace Graphs.Models;
 
-public class GraphDirected2
+public class GraphDirectedWeighted
 {
     private readonly Lazy<INode[]> _nodes;
 
-    public IEdgeDirected[] Edges { get; }
+    public IWeightedEdgeDirected[] Edges { get; }
 
     public INode[] Nodes => _nodes.Value;
 
-    public GraphDirected2(IEnumerable<IEdgeDirected> edges)
+    public GraphDirectedWeighted(IEnumerable<IWeightedEdgeDirected> edges)
     {
         if (edges is null) throw new ArgumentNullException($"Argument {nameof(edges)} cannot be null.");
         
-        Edges = edges as EdgeDirected[] ?? edges.ToArray();
+        Edges = edges as IWeightedEdgeDirected[] ?? edges.ToArray();
         _nodes = new Lazy<INode[]>(GetNodes);
     }
 
-    public IEnumerable<IEdgeDirected> FindOutgoingEdgesOfNode(INode node) 
+    public IEnumerable<IWeightedEdgeDirected> FindOutgoingEdgesOfNode(INode node) 
         => Edges.Where(e => e.From.Id == node.Id);
 
     private INode[] GetNodes()

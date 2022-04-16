@@ -10,7 +10,7 @@ namespace ShortestPathAlgorithms.Algorithms;
 
 public static class Dijkstra
 {
-    public static Path<int> Find(GraphDirected graph, INode from, INode to)
+    public static Path<int> Find(GraphDirectedWeighted graph, INode from, INode to)
     {
         var initialPriorities = graph
             .Nodes

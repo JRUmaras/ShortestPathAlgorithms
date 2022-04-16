@@ -44,7 +44,7 @@ namespace ClientApp
 
         private static Request CreateRequest()
         {
-            var graph = DirectedGraphFactory.CreateBasicGraph();
+            var graph = DirectedGraphFactory.CreateBasicGraphWeighted();
             var startNode = graph.Nodes.First(n => n.Id == "7");
             var endNode = graph.Nodes.First(n => n.Id == "6");
 
