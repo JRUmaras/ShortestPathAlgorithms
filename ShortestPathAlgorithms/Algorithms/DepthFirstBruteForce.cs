@@ -8,7 +8,7 @@ namespace ShortestPathAlgorithms.Algorithms;
 
 public static class DepthFirstBruteForce
 {
-    public static Path<int> FindShortestPath(GraphDirectedWeighted graph, INode start, INode end)
+    public static Path<int>? Find(GraphDirectedWeighted graph, INode start, INode end)
     {
         var currentPath = new Stack<INode>();
         currentPath.Push(start);
@@ -52,6 +52,6 @@ public static class DepthFirstBruteForce
                 .ForEach(e => edgeStack.Push(e));
         }
 
-        return paths.OrderBy(p => p.Cost).First();
+        return paths.OrderBy(p => p.Cost).FirstOrDefault();
     }
 }

@@ -16,14 +16,20 @@ public static class DijkstraDynamic
     // * What if graph is not connected? We start at source node, explore sub-graph, and then we dequeue the next node from another sub-graph, but that seems wrong because that part of graph can't be reached from the source
     // * Compare DijkstraDynamic and Dijkstra. DijkstraDynamic is more generic, should be possible to process test cases of Dijkstra. Apply Unit tests of Dijkstra to DijkstraDynamic
 
-    public static Path<double> Find(GraphDirected graph, INode from, INode to, ICostCalculator<double> costCalculator, IState startState)
+    public static Path<double>? Find(GraphDirected graph, INode from, INode to, ICostCalculator<double> costCalculator, IState startState)
     {
-        var initialPriorities = graph
-            .Nodes
-            .Select(node => node.Equals(from) ? (node, 0d) : (node, double.MaxValue));
+        //var initialPriorities = graph
+        //    .Nodes
+        //    .Select(node => node.Equals(from) ? (node, 0d) : (node, double.MaxValue));
+        var initialPriorities = new List<(INode element, double priority)>
+        {
+            (from, 0)
+        };
         var nodesToExplore = new PriorityQueue(initialPriorities);
 
         var result = Search(nodesToExplore, graph, costCalculator, startState);
+
+        if (!result.ContainsKey(to)) return null;
 
         var path = Backtrack(to, result);
 
@@ -53,7 +59,7 @@ public static class DijkstraDynamic
 
                 var (stepCost, newState) = costCalculator.Calculate(edge, state);
                 var cost = costAccumulated + stepCost;
-                if (cost >= exploreQueue.GetPriority(edge.To)) continue;
+                if (exploreQueue.TryGetPriority(edge.To, out var costOld) && cost >= costOld) continue;
                 exploreQueue.PushOrUpdate(edge.To, cost);
                 childToParentMap[edge.To] = currentNode;
                 stateCache[edge.To] = newState;

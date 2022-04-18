@@ -60,6 +60,8 @@ public class PriorityQueue<TElement, TPriority>
 
     public TPriority GetPriority(TElement element) => _priorityDict[element];
 
+    public bool TryGetPriority(TElement element, out TPriority? priority) => _priorityDict.TryGetValue(element, out priority);
+
     private void ResetNextToDequeue()
     {
         _nextToDequeue = null;

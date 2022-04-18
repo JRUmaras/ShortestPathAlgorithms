@@ -10,14 +10,18 @@ namespace ShortestPathAlgorithms.Algorithms;
 
 public static class Dijkstra
 {
-    public static Path<int> Find(GraphDirectedWeighted graph, INode from, INode to)
+    public static Path<int>? Find(GraphDirectedWeighted graph, INode from, INode to)
     {
-        var initialPriorities = graph
-            .Nodes
-            .Select(node => node.Equals(from) ? (node, 0) : (node, int.MaxValue));
+        var initialPriorities = new List<(INode element, int priority)>
+        {
+            (from, 0)
+        };
+
         var nodesToExplore = new PriorityQueue(initialPriorities);
 
         var result = Search(nodesToExplore, graph.FindOutgoingEdgesOfNode);
+
+        if (!result.ContainsKey(to)) return null;
 
         var path = Backtrack(to, result);
 
@@ -43,7 +47,7 @@ public static class Dijkstra
                 if (visitedNodes.Keys.Contains(edge.To)) continue;
 
                 var distance = distanceFromSource + edge.Weight;
-                if (distance >= exploreQueue.GetPriority(edge.To)) continue;
+                if (exploreQueue.TryGetPriority(edge.To, out var distanceOld) && distance >= distanceOld) continue;
                 exploreQueue.PushOrUpdate(edge.To, distance);
                 childToParentMap[edge.To] = currentNode;
             }
