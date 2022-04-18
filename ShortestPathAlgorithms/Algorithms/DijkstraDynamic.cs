@@ -12,10 +12,6 @@ namespace ShortestPathAlgorithms.Algorithms;
 
 public static class DijkstraDynamic
 {
-    // TODO
-    // * What if graph is not connected? We start at source node, explore sub-graph, and then we dequeue the next node from another sub-graph, but that seems wrong because that part of graph can't be reached from the source
-    // * Compare DijkstraDynamic and Dijkstra. DijkstraDynamic is more generic, should be possible to process test cases of Dijkstra. Apply Unit tests of Dijkstra to DijkstraDynamic
-
     public static Path<double>? Find(GraphDirected graph, INode from, INode to, ICostCalculator<double> costCalculator, IState startState)
     {
         //var initialPriorities = graph
