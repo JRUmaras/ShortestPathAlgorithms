@@ -26,8 +26,10 @@ public class CrossTests
         // Act
         foreach (var (start, end) in startEndNodePairs)
         {
-            distancesBruteForce.Add(DepthFirstBruteForce.FindShortestPath(graph, start, end).Cost);
-            distancesDijkstra.Add(Dijkstra.Find(graph, start, end).Cost);
+            var bruteForceSolution = DepthFirstBruteForce.Find(graph, start, end) ?? throw new NullReferenceException("Brute force algorithm failed to find a solution.");
+            var dijkstraSolution = Dijkstra.Find(graph, start, end) ?? throw new NullReferenceException("Dijkstra algorithm failed to find a solution.");
+            distancesBruteForce.Add(bruteForceSolution.Cost);
+            distancesDijkstra.Add(dijkstraSolution.Cost);
         }
         
         // Assert

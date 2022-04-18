@@ -52,7 +52,7 @@ namespace BruteForceSpaService
         {
             return Task.Run(() =>
             {
-                var path = DepthFirstBruteForce.FindShortestPath(request.Graph, request.Start, request.End);
+                var path = DepthFirstBruteForce.Find(request.Graph, request.Start, request.End);
                 return new Response(path);
             }, ct);
         }
