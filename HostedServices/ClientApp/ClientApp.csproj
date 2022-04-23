@@ -8,6 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\ShortestPathAlgorithms\Graphs\Graphs.csproj" />
+      <ProjectReference Include="..\..\ShortestPathAlgorithms\ShortestPathAlgorithms\ShortestPathAlgorithms.csproj" />
       <ProjectReference Include="..\BruteForceSpaService\BruteForceSpaService.csproj" />
       <ProjectReference Include="..\EasyNetQTools\EasyNetQTools.csproj" />
     </ItemGroup>

@@ -2,11 +2,11 @@
 
 namespace BruteForceSpaService
 {
-    public class Response
+    public class Response<TCost>
     {
-        public Path<int> Path { get; }
+        public Path<TCost>? Path { get; }
 
-        public Response(Path<int> path)
+        public Response(Path<TCost>? path)
         {
             Path = path;
         }

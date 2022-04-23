@@ -8,15 +8,17 @@ using EasyNetQTools.Options;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using ShortestPathAlgorithms.Algorithms;
+using ShortestPathAlgorithms.CostCalculators;
+using ShortestPathAlgorithms.Models;
 
 namespace BruteForceSpaService
 {
     public sealed class BruteForceSpaService : IHostedService, IDisposable
     {
-        private readonly Server<Request, Response> _server;
+        private readonly Server<Request, Response<double>> _server;
         private Task? _startupTask;
 
-        public BruteForceSpaService(RabbitMqOptions rabbitMqOptions, IOptions<BruteForceSpaServiceOptions> bruteForceSpaServiceOptions)
+        public BruteForceSpaService(IOptions<RabbitMqOptions> rabbitMqOptions, IOptions<BruteForceSpaServiceOptions> bruteForceSpaServiceOptions)
         {
             var customNaming = new CustomNaming
             {
@@ -24,7 +26,7 @@ namespace BruteForceSpaService
                 RequestQueueName = bruteForceSpaServiceOptions.Value.RequestQueueName,
             };
             
-            _server = new Server<Request, Response>(Processor, rabbitMqOptions.ConnString, customNaming);
+            _server = new Server<Request, Response<double>>(Processor, rabbitMqOptions.Value.ConnString, customNaming);
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -48,12 +50,18 @@ namespace BruteForceSpaService
             _server.Dispose();
         }
 
-        private static Task<Response> Processor(Request request, CancellationToken ct)
+        private static Task<Response<double>> Processor(Request request, CancellationToken ct)
         {
             return Task.Run(() =>
             {
-                var path = DepthFirstBruteForce.Find(request.Graph, request.Start, request.End);
-                return new Response(path);
+                var costCalc = new UnitCostCalculator();
+                var startState = new State
+                {
+                    Time = DateTime.UtcNow.Date
+                };
+
+                var path = DijkstraDynamic.Find(request.Graph, request.Start, request.End, costCalc, startState);
+                return new Response<double>(path);
             }, ct);
         }
     }

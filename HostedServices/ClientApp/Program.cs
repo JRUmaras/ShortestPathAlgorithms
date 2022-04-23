@@ -7,48 +7,57 @@ using EasyNetQTools.NamingConventions.Models;
 using Graphs.Factories;
 using Graphs.Models;
 
-namespace ClientApp
+namespace ClientApp;
+
+internal static class Program
 {
-    internal static class Program
+    private static async Task Main()
     {
-        private static async Task Main()
+        var customNaming = new CustomNaming
         {
-            var customNaming = new CustomNaming
+            ExchangeName = "bruteforce.exchange",
+            RequestQueueName = "bruteforce.queue",
+        };
+
+        var client = new Client<Request, Response<double>>(customNaming);
+
+        var request = CreateRequest();
+
+        while (true)
+        {
+            Console.WriteLine("Calling the service...");
+            try
             {
-                ExchangeName = "bruteforce.exchange",
-                RequestQueueName = "bruteforce.queue",
-            };
-            
-            var client = new Client<Request, Response>(customNaming);
-
-            var request = CreateRequest();
-
-            while (true)
-            {
-                Console.WriteLine("Calling the service...");
-                try
+                var response = await client.MakeRequestAsync(request);
+                Console.WriteLine();
+                Console.WriteLine("Response");
+                if (response.Path is not null)
                 {
-                    var response = await client.MakeRequestAsync(request);
-                    Console.WriteLine(response.Path.Cost);
+                    Console.WriteLine($"Cost: {response.Path.Cost}");
+                    Console.WriteLine($"Path: {string.Join(" -> ", response.Path.Nodes.Select(n => n.Id))}");
                 }
-                catch (TaskCanceledException)
+                else
                 {
-                    Console.WriteLine("The request was cancelled. Maybe a time-out?");
+                    Console.WriteLine("Path could not be found.");
                 }
-
-                Console.WriteLine("Press <enter> to continue or <esc> to terminate...");
-                var key = Console.ReadKey();
-                if (key.Key == ConsoleKey.Escape) break;
             }
-        }
+            catch (TaskCanceledException)
+            {
+                Console.WriteLine("The request was cancelled. Maybe a time-out?");
+            }
 
-        private static Request CreateRequest()
-        {
-            var graph = DirectedGraphFactory.CreateBasicGraphWeighted();
-            var startNode = graph.Nodes.First(n => n.Id == "7");
-            var endNode = graph.Nodes.First(n => n.Id == "6");
-
-            return new Request(graph, (Node)startNode, (Node)endNode);
+            Console.WriteLine("Press <enter> to continue or <esc> to terminate...");
+            var key = Console.ReadKey();
+            if (key.Key == ConsoleKey.Escape) break;
         }
+    }
+
+    private static Request CreateRequest()
+    {
+        var graph = DirectedGraphFactory.CreateBasicGraph();
+        var startNode = graph.Nodes.First(n => n.Id == "7");
+        var endNode = graph.Nodes.First(n => n.Id == "6");
+
+        return new Request(graph, (Node)startNode, (Node)endNode);
     }
 }
