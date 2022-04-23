@@ -105,7 +105,9 @@ public static class DirectedGraphFactory
         return graph;
     }
 
-    private static EdgeDirected[] CreateEdgesOfBasicGraph()
+
+
+    private static EdgeDirectedWeighted[] CreateEdgesOfBasicGraph()
     {
         var nodes = new[]
         {
@@ -121,30 +123,30 @@ public static class DirectedGraphFactory
 
         var edges = new[]
         {
-            new EdgeDirected(nodes[0], nodes[1], 1),
-            new EdgeDirected(nodes[0], nodes[2], 1),
-            new EdgeDirected(nodes[1], nodes[4], 1),
-            new EdgeDirected(nodes[1], nodes[5], 1),
-            new EdgeDirected(nodes[2], nodes[3], 1),
-            new EdgeDirected(nodes[2], nodes[4], 1),
-            new EdgeDirected(nodes[3], nodes[7], 1),
-            new EdgeDirected(nodes[4], nodes[5], 1),
-            new EdgeDirected(nodes[4], nodes[6], 1),
+            new EdgeDirectedWeighted(nodes[0], nodes[1], 1),
+            new EdgeDirectedWeighted(nodes[0], nodes[2], 1),
+            new EdgeDirectedWeighted(nodes[1], nodes[4], 1),
+            new EdgeDirectedWeighted(nodes[1], nodes[5], 1),
+            new EdgeDirectedWeighted(nodes[2], nodes[3], 1),
+            new EdgeDirectedWeighted(nodes[2], nodes[4], 1),
+            new EdgeDirectedWeighted(nodes[3], nodes[7], 1),
+            new EdgeDirectedWeighted(nodes[4], nodes[5], 1),
+            new EdgeDirectedWeighted(nodes[4], nodes[6], 1),
             // reverse edges
-            new EdgeDirected(nodes[1], nodes[0], 1),
-            new EdgeDirected(nodes[2], nodes[0], 1),
-            new EdgeDirected(nodes[3], nodes[2], 1),
-            new EdgeDirected(nodes[4], nodes[1], 1),
-            new EdgeDirected(nodes[4], nodes[2], 1),
-            new EdgeDirected(nodes[5], nodes[1], 1),
-            new EdgeDirected(nodes[5], nodes[4], 1),
-            new EdgeDirected(nodes[6], nodes[4], 1),
-            new EdgeDirected(nodes[7], nodes[3], 1)
+            new EdgeDirectedWeighted(nodes[1], nodes[0], 1),
+            new EdgeDirectedWeighted(nodes[2], nodes[0], 1),
+            new EdgeDirectedWeighted(nodes[3], nodes[2], 1),
+            new EdgeDirectedWeighted(nodes[4], nodes[1], 1),
+            new EdgeDirectedWeighted(nodes[4], nodes[2], 1),
+            new EdgeDirectedWeighted(nodes[5], nodes[1], 1),
+            new EdgeDirectedWeighted(nodes[5], nodes[4], 1),
+            new EdgeDirectedWeighted(nodes[6], nodes[4], 1),
+            new EdgeDirectedWeighted(nodes[7], nodes[3], 1)
         };
         return edges;
     }
 
-    private static EdgeDirected[] CreateDisconnectedGraphEdges()
+    private static EdgeDirectedWeighted[] CreateDisconnectedGraphEdges()
     {
         var nodes = new[]
         {
@@ -159,18 +161,18 @@ public static class DirectedGraphFactory
         var edges = new[]
         {
             // Sub-graph 1
-            new EdgeDirected(nodes[0], nodes[1], 1),
-            new EdgeDirected(nodes[1], nodes[2], 1),
-            new EdgeDirected(nodes[2], nodes[1], 1),
+            new EdgeDirectedWeighted(nodes[0], nodes[1], 1),
+            new EdgeDirectedWeighted(nodes[1], nodes[2], 1),
+            new EdgeDirectedWeighted(nodes[2], nodes[1], 1),
             // Sub-graph 2
-            new EdgeDirected(nodes[3], nodes[4], 1),
-            new EdgeDirected(nodes[4], nodes[5], 1),
-            new EdgeDirected(nodes[5], nodes[3], 1),
+            new EdgeDirectedWeighted(nodes[3], nodes[4], 1),
+            new EdgeDirectedWeighted(nodes[4], nodes[5], 1),
+            new EdgeDirectedWeighted(nodes[5], nodes[3], 1),
         };
         return edges;
     }
 
-    private static EdgeDirected[] CreateEdgesGraphWithUnreachableNode()
+    private static EdgeDirectedWeighted[] CreateEdgesGraphWithUnreachableNode()
     {
         var nodes = new[]
         {
@@ -183,11 +185,11 @@ public static class DirectedGraphFactory
         var edges = new[]
         {
             // Unreachable node
-            new EdgeDirected(nodes[0], nodes[1], 1),
+            new EdgeDirectedWeighted(nodes[0], nodes[1], 1),
             // Reachable nodes
-            new EdgeDirected(nodes[1], nodes[2], 1),
-            new EdgeDirected(nodes[2], nodes[3], 1),
-            new EdgeDirected(nodes[3], nodes[1], 1)
+            new EdgeDirectedWeighted(nodes[1], nodes[2], 1),
+            new EdgeDirectedWeighted(nodes[2], nodes[3], 1),
+            new EdgeDirectedWeighted(nodes[3], nodes[1], 1)
         };
         return edges;
     }
@@ -195,8 +197,8 @@ public static class DirectedGraphFactory
     /// <summary>
     /// Based on https://sboyles.github.io/teaching/ce392d/8-tdsp.pdf.
     /// </summary>
-    /// <returns>Array of directed edges <see cref="EdgeDirected"/>.</returns>
-    private static EdgeDirected[] CreateEdgesBasicGraph2()
+    /// <returns>Array of directed edges <see cref="EdgeDirectedWeighted"/>.</returns>
+    private static EdgeDirectedWeighted[] CreateEdgesBasicGraph2()
     {
         var nodes = new[]
         {
@@ -208,11 +210,11 @@ public static class DirectedGraphFactory
 
         var edges = new[]
         {
-            new EdgeDirected(nodes[0], nodes[1], 0),
-            new EdgeDirected(nodes[0], nodes[2], 0),
-            new EdgeDirected(nodes[1], nodes[2], 0),
-            new EdgeDirected(nodes[1], nodes[3], 0),
-            new EdgeDirected(nodes[2], nodes[3], 0)
+            new EdgeDirectedWeighted(nodes[0], nodes[1], 0),
+            new EdgeDirectedWeighted(nodes[0], nodes[2], 0),
+            new EdgeDirectedWeighted(nodes[1], nodes[2], 0),
+            new EdgeDirectedWeighted(nodes[1], nodes[3], 0),
+            new EdgeDirectedWeighted(nodes[2], nodes[3], 0)
         };
         return edges;
     }

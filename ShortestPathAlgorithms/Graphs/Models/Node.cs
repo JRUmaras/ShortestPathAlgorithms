@@ -20,4 +20,6 @@ public class Node : INode
     public static bool operator ==(Node node1, Node node2) => node1.Equals(node2);
     
     public static bool operator !=(Node node1, Node node2) => !(node1 == node2);
+
+    public override string ToString() => Id;
 }

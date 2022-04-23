@@ -17,7 +17,7 @@ public class GraphDirected
     {
         if (edges is null) throw new ArgumentNullException($"Argument '{nameof(edges)}' cannot be null.");
         
-        Edges = edges as EdgeDirected[] ?? edges.ToArray();
+        Edges = edges as EdgeDirectedWeighted[] ?? edges.ToArray();
         _nodes = new Lazy<INode[]>(GetNodes);
     }
 

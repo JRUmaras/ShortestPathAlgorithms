@@ -1,6 +1,6 @@
 ﻿namespace Graphs.Interfaces
 {
-    public interface IWeightedEdgeDirected : IEdgeDirected
+    public interface IEdgeDirectedWeighted : IEdgeDirected
     {
         int Weight { get; }
     }

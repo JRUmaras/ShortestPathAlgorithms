@@ -15,7 +15,7 @@ public static class DepthFirstBruteForce
 
         var paths = new List<Path<int>>();
 
-        var edgeStack = new Stack<IWeightedEdgeDirected>(graph.FindOutgoingEdgesOfNode(start));
+        var edgeStack = new Stack<IEdgeDirectedWeighted>(graph.FindOutgoingEdgesOfNode(start));
 
         while (edgeStack.Count > 0)
         {

@@ -30,7 +30,7 @@ public static class Dijkstra
 
     private static Dictionary<INode, (INode? parent, int distance)> Search(
         PriorityQueue exploreQueue, 
-        Func<INode, IEnumerable<IWeightedEdgeDirected>> getNodeEdges)
+        Func<INode, IEnumerable<IEdgeDirectedWeighted>> getNodeEdges)
     {
         var visitedNodes = new Dictionary<INode, (INode? parent, int distance)>();
         var childToParentMap = new Dictionary<INode, INode>();
