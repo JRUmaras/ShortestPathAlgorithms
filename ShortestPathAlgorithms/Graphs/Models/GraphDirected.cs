@@ -5,7 +5,7 @@ using Graphs.Interfaces;
 
 namespace Graphs.Models;
 
-public class GraphDirected
+public class GraphDirected : IGraphDirected
 {
     private readonly Lazy<INode[]> _nodes;
 

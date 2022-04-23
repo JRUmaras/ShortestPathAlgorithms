@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Graphs.Interfaces;
 using Graphs.Models;
 
 namespace Graphs.Factories;
@@ -105,7 +108,50 @@ public static class DirectedGraphFactory
         return graph;
     }
 
+    public static (GraphDirected Graph, IReadOnlyDictionary<INode, IPointCartesian>) CreateRectangularGrid(int length, int height)
+    {
+        var nodes = Enumerable
+            .Range(0, (length + 1) * (height + 1))
+            .Select(id => (INode) new Node(id.ToString()))
+            .ToArray();
 
+        // Create edges to nearest nodes for each node, including diagonal edges
+        var steps = new List<(int XStep, int YStep)>
+        {
+            (-1, 1),
+            (0, 1),
+            (1, 1),
+            (1, 0)
+        };
+
+        int CoordinatesToIndex(int x, int y) => x + y * (length + 1);
+
+        var edges = new List<IEdgeDirected>();
+        var nodeToCoordinatesMap = new Dictionary<INode, IPointCartesian>();
+
+        for (var y = 0; y <= height; y++)
+        for (var x = 0; x <= length; x++)
+        {
+            var currentNodeIndex = CoordinatesToIndex(x, y);
+            nodeToCoordinatesMap.Add(nodes[currentNodeIndex], new PointCartesian(x, y));
+
+            foreach (var (xStep, yStep) in steps)
+            {
+                var x2 = x + xStep;
+                var y2 = y + yStep;
+
+                if (x2 < 0 || x2 > length || y2 > height) continue;
+
+                var targetNodeIndex = CoordinatesToIndex(x2, y2);
+                var edge = new EdgeDirected(nodes[currentNodeIndex], nodes[targetNodeIndex]);
+                var edgeReverse = new EdgeDirected(nodes[targetNodeIndex], nodes[currentNodeIndex]);
+                edges.Add(edge);
+                edges.Add(edgeReverse);
+            }
+        }
+
+        return (new GraphDirected(edges), nodeToCoordinatesMap);
+    }
 
     private static EdgeDirectedWeighted[] CreateEdgesOfBasicGraph()
     {
