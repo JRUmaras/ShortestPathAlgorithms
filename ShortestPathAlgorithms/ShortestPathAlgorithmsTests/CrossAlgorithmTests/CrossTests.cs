@@ -10,7 +10,7 @@ using ShortestPathAlgorithms.Interfaces;
 using ShortestPathAlgorithms.Models;
 using Xunit;
 
-namespace ShortestPathAlgorithmsTests;
+namespace ShortestPathAlgorithmsTests.CrossAlgorithmTests;
 
 public class CrossTests
 {

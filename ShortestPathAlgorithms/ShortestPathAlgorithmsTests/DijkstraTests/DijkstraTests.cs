@@ -3,7 +3,7 @@ using Graphs.Factories;
 using ShortestPathAlgorithms.Algorithms;
 using Xunit;
 
-namespace ShortestPathAlgorithmsTests;
+namespace ShortestPathAlgorithmsTests.DijkstraTests;
 
 public class DijkstraTests
 {

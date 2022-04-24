@@ -9,19 +9,19 @@ using ShortestPathAlgorithms.Models;
 using ShortestPathAlgorithmsTests.Fixtures;
 using Xunit;
 
-namespace ShortestPathAlgorithmsTests;
+namespace ShortestPathAlgorithmsTests.DepthFirstBruteForceTests;
 
-public class DynamicDijkstraTests : IClassFixture<SimpleDynamicGraphFixture>
+public class DepthFirstBruteForceDynamicTests : IClassFixture<SimpleDynamicGraphFixture>
 {
     private readonly SimpleDynamicGraphFixture _fixture;
 
-    public DynamicDijkstraTests(SimpleDynamicGraphFixture fixture)
+    public DepthFirstBruteForceDynamicTests(SimpleDynamicGraphFixture fixture)
     {
         _fixture = fixture;
     }
 
     [Fact]
-    public void DijkstraDynamic_Find_ShouldFindSolution()
+    public void Find_BasicGraph_ShouldFindSolution()
     {
         // Arrange
         var graph = _fixture.Graph;
@@ -33,7 +33,7 @@ public class DynamicDijkstraTests : IClassFixture<SimpleDynamicGraphFixture>
         var state = _fixture.StartState;
 
         // Act
-        var path = DijkstraDynamic<IState>.Find(graph, start, end, costCalc, state);
+        var path = DepthFirstBruteForceDynamic<IState>.Find(graph, start, end, costCalc, state);
 
         // Assert
         Assert.NotNull(path);
@@ -52,7 +52,7 @@ public class DynamicDijkstraTests : IClassFixture<SimpleDynamicGraphFixture>
         // Act
         var startNode = graph.Nodes.First(n => n.Id == "7");
         var endNode = graph.Nodes.First(n => n.Id == "6");
-        var path = DijkstraDynamic<IState>.Find(graph, startNode, endNode, costCalculator, _fixture.StartState);
+        var path = DepthFirstBruteForceDynamic<IState>.Find(graph, startNode, endNode, costCalculator, _fixture.StartState);
         
         // Assert
         Assert.NotNull(path);
@@ -70,7 +70,7 @@ public class DynamicDijkstraTests : IClassFixture<SimpleDynamicGraphFixture>
         // Act
         var startNode = graph.Nodes.First(n => n.Id == "0");
         var endNode = graph.Nodes.First(n => n.Id == "5");
-        var path = DijkstraDynamic<IState>.Find(graph, startNode, endNode, costCalculator, _fixture.StartState);
+        var path = DepthFirstBruteForceDynamic<IState>.Find(graph, startNode, endNode, costCalculator, _fixture.StartState);
         
         // Assert
         Assert.Null(path);
@@ -86,7 +86,7 @@ public class DynamicDijkstraTests : IClassFixture<SimpleDynamicGraphFixture>
         // Act
         var startNode = graph.Nodes.First(n => n.Id == "1");
         var endNode = graph.Nodes.First(n => n.Id == "0");
-        var path = DijkstraDynamic<IState>.Find(graph, startNode, endNode, costCalculator, _fixture.StartState);
+        var path = DepthFirstBruteForceDynamic<IState>.Find(graph, startNode, endNode, costCalculator, _fixture.StartState);
         
         // Assert
         Assert.Null(path);
