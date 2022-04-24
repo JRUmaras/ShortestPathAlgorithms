@@ -20,7 +20,7 @@ public class DijkstraTests
         
         // Assert
         Assert.NotNull(path);
-        Assert.Equal(4, path.Cost);
+        Assert.Equal(4, path!.Cost);
         Assert.True(path.Nodes.Select(n => n.Id).SequenceEqual(new [] {"7", "3", "2", "4", "6"}));
     }
 

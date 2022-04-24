@@ -3,14 +3,13 @@ using System.Linq;
 using Graphs.Interfaces;
 using Graphs.Models;
 using ShortestPathAlgorithms.CostCalculators.Interfaces;
-using ShortestPathAlgorithms.Interfaces;
 using ShortestPathAlgorithms.Models;
 
 namespace ShortestPathAlgorithms.Algorithms;
 
-public static class DepthFirstBruteForceDynamic
+public static class DepthFirstBruteForceDynamic<TState>
 {
-    public static Path<double>? Find(GraphDirected graph, INode start, INode end, ICostCalculator<double> costCalculator, IState startState)
+    public static Path<double>? Find(GraphDirected graph, INode start, INode end, ICostCalculator<double, TState> costCalculator, TState startState)
     {
         var currentPath = new Stack<INode>();
         currentPath.Push(start);

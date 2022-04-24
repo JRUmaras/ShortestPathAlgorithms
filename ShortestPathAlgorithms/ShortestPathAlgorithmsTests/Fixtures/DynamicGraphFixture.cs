@@ -20,7 +20,7 @@ public class SimpleDynamicGraphFixture
 
     public INode EndNode { get; }
 
-    public ICostCalculator<double> CostCalculator { get; }
+    public ICostCalculator<double, IState> CostCalculator { get; }
 
     public IState StartState => new State
     {

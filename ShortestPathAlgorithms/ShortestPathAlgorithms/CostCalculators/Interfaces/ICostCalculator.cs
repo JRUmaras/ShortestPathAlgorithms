@@ -1,10 +1,9 @@
 ﻿using Graphs.Interfaces;
-using ShortestPathAlgorithms.Interfaces;
 
 namespace ShortestPathAlgorithms.CostCalculators.Interfaces
 {
-    public interface ICostCalculator<TCost>
+    public interface ICostCalculator<TCost, TState>
     {
-        (TCost Cost, IState EndState) Calculate(IEdgeDirected edgeDirected, IState startState);
+        (TCost Cost, TState EndState) Calculate(IEdgeDirected edgeDirected, TState startState);
     }
 }

@@ -7,7 +7,7 @@ using ShortestPathAlgorithms.Models;
 
 namespace ShortestPathAlgorithms.CostCalculators
 {
-    public class TimeCostCalculator : ICostCalculator<double>
+    public class TimeCostCalculator : ICostCalculator<double, IState>
     {
         private readonly Dictionary<string, Func<DateTime, TimeSpan>> _edgeCostDictionary;
 

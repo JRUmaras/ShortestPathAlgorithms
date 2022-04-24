@@ -33,11 +33,11 @@ public class DynamicDijkstraTests : IClassFixture<SimpleDynamicGraphFixture>
         var state = _fixture.StartState;
 
         // Act
-        var path = DijkstraDynamic.Find(graph, start, end, costCalc, state);
+        var path = DijkstraDynamic<IState>.Find(graph, start, end, costCalc, state);
 
         // Assert
         Assert.NotNull(path);
-        Assert.Equal(_fixture.ExpectedPath.Cost, path.Cost);
+        Assert.Equal(_fixture.ExpectedPath.Cost, path!.Cost);
         Assert.Equal(_fixture.ExpectedPath.Nodes.Count, path.Nodes.Count);
         Assert.Equal(_fixture.ExpectedPath.Nodes.Select(n => n.Id), path.Nodes.Select(n => n.Id));
     }
@@ -52,11 +52,11 @@ public class DynamicDijkstraTests : IClassFixture<SimpleDynamicGraphFixture>
         // Act
         var startNode = graph.Nodes.First(n => n.Id == "7");
         var endNode = graph.Nodes.First(n => n.Id == "6");
-        var path = DijkstraDynamic.Find(graph, startNode, endNode, costCalculator, _fixture.StartState);
+        var path = DijkstraDynamic<IState>.Find(graph, startNode, endNode, costCalculator, _fixture.StartState);
         
         // Assert
         Assert.NotNull(path);
-        Assert.Equal(4, path.Cost);
+        Assert.Equal(4, path!.Cost);
         Assert.True(path.Nodes.Select(n => n.Id).SequenceEqual(new [] {"7", "3", "2", "4", "6"}));
     }
 
@@ -70,7 +70,7 @@ public class DynamicDijkstraTests : IClassFixture<SimpleDynamicGraphFixture>
         // Act
         var startNode = graph.Nodes.First(n => n.Id == "0");
         var endNode = graph.Nodes.First(n => n.Id == "5");
-        var path = DijkstraDynamic.Find(graph, startNode, endNode, costCalculator, _fixture.StartState);
+        var path = DijkstraDynamic<IState>.Find(graph, startNode, endNode, costCalculator, _fixture.StartState);
         
         // Assert
         Assert.Null(path);
@@ -86,15 +86,15 @@ public class DynamicDijkstraTests : IClassFixture<SimpleDynamicGraphFixture>
         // Act
         var startNode = graph.Nodes.First(n => n.Id == "1");
         var endNode = graph.Nodes.First(n => n.Id == "0");
-        var path = DijkstraDynamic.Find(graph, startNode, endNode, costCalculator, _fixture.StartState);
+        var path = DijkstraDynamic<IState>.Find(graph, startNode, endNode, costCalculator, _fixture.StartState);
         
         // Assert
         Assert.Null(path);
     }
 
-    private static Mock<ICostCalculator<double>> UnitCostCalculatorMock()
+    private static Mock<ICostCalculator<double, IState>> UnitCostCalculatorMock()
     {
-        var costCalculatorMock = new Mock<ICostCalculator<double>>();
+        var costCalculatorMock = new Mock<ICostCalculator<double, IState>>();
         costCalculatorMock
             .Setup(x => x.Calculate(It.IsAny<IEdgeDirected>(), It.IsAny<IState>()))
             .Returns<IEdgeDirected, IState>((edge, state) => (1, new State { Time = state.Time }));

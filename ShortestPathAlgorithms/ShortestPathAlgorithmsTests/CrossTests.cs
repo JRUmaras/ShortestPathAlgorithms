@@ -47,7 +47,7 @@ public class CrossTests
         var distancesDijkstra = new List<double>(startEndNodePairs.Count);
         var diffs = new List<double>(startEndNodePairs.Count);
         
-        var costCalculatorMock = new Mock<ICostCalculator<double>>();
+        var costCalculatorMock = new Mock<ICostCalculator<double, IState>>();
         costCalculatorMock
             .Setup(x => x.Calculate(It.IsAny<IEdgeDirected>(), It.IsAny<IState>()))
             .Returns<IEdgeDirected, IState>((edge, state) =>
@@ -63,9 +63,19 @@ public class CrossTests
         // Act
         foreach (var (start, end) in startEndNodePairs)
         {
-            distancesBruteForce.Add(DepthFirstBruteForceDynamic.Find(graph, start, end, costCalculatorMock.Object, InitStartState()).Cost);
-            distancesDijkstra.Add(DijkstraDynamic.Find(graph, start, end, costCalculatorMock.Object, InitStartState()).Cost);
+            var bruteForcePath = DepthFirstBruteForceDynamic<IState>.Find(graph, start, end, costCalculatorMock.Object, InitStartState());
+            var dijkstraPath = DijkstraDynamic<IState>.Find(graph, start, end, costCalculatorMock.Object, InitStartState());
+
+            if (bruteForcePath is not null) distancesBruteForce.Add(bruteForcePath.Cost);
+            if (dijkstraPath is not null) distancesDijkstra.Add(dijkstraPath.Cost);
         }
+        
+        // Assert
+        Assert.Equal(startEndNodePairs.Count, distancesDijkstra.Count);
+        Assert.Equal(startEndNodePairs.Count, distancesBruteForce.Count);
+
+        Assert.True(distancesDijkstra.All(d => d >= 0));
+        Assert.True(distancesBruteForce.All(d => d >= 0));
 
         for (var idx = 0; idx < startEndNodePairs.Count; idx++)
         {
@@ -74,10 +84,7 @@ public class CrossTests
                 : Math.Abs((distancesDijkstra[idx] - distancesBruteForce[idx]) / distancesBruteForce[idx]);
             diffs.Add(diff);
         }
-        
-        // Assert
-        Assert.True(distancesDijkstra.All(d => d >= 0));
-        Assert.True(distancesBruteForce.All(d => d >= 0));
+
         Assert.True(diffs.All(delta => delta < 1e-15));
     }
 

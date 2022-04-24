@@ -5,7 +5,7 @@ using ShortestPathAlgorithms.Models;
 
 namespace ShortestPathAlgorithms.CostCalculators;
 
-public class UnitCostCalculator : ICostCalculator<double>
+public class UnitCostCalculator : ICostCalculator<double, IState>
 {
     public (double Cost, IState EndState) Calculate(IEdgeDirected edgeDirected, IState startState)
     {
