@@ -107,10 +107,21 @@ public static class DirectedGraphFactory
         return graph;
     }
 
-    public static (GraphDirected Graph, IReadOnlyDictionary<INode, IPointCartesian>) CreateRectangularGrid(int length, int height)
+    /// <summary>
+    /// Creates a graph from a rectangular grid.
+    /// Nodes are spaced in unit intervals in both x and y directions.
+    /// Nodes are connected to nearest neighbors in x, y, and diagonal directions.
+    /// Grid can be pictured as a rectangle placed in the first quadrant of coordinate plane,
+    /// nodes are placed from left to right, bottom to top from the origin. So 0th node is
+    /// at the origin, the last node is the furthest grid point from the origin.
+    /// </summary>
+    /// <param name="width">Width of the grid.</param>
+    /// <param name="height">Height of the grid.</param>
+    /// <returns></returns>
+    public static (GraphDirected Graph, IReadOnlyDictionary<INode, IPointCartesian>) CreateRectangularGrid(int width, int height)
     {
         var nodes = Enumerable
-            .Range(0, (length + 1) * (height + 1))
+            .Range(0, (width + 1) * (height + 1))
             .Select(id => (INode) new Node(id.ToString()))
             .ToArray();
 
@@ -123,13 +134,13 @@ public static class DirectedGraphFactory
             (1, 0)
         };
 
-        int CoordinatesToIndex(int x, int y) => x + y * (length + 1);
+        int CoordinatesToIndex(int x, int y) => x + y * (width + 1);
 
         var edges = new List<IEdgeDirected>();
         var nodeToCoordinatesMap = new Dictionary<INode, IPointCartesian>();
 
         for (var y = 0; y <= height; y++)
-        for (var x = 0; x <= length; x++)
+        for (var x = 0; x <= width; x++)
         {
             var currentNodeIndex = CoordinatesToIndex(x, y);
             nodeToCoordinatesMap.Add(nodes[currentNodeIndex], new PointCartesian(x, y));
@@ -139,7 +150,7 @@ public static class DirectedGraphFactory
                 var x2 = x + xStep;
                 var y2 = y + yStep;
 
-                if (x2 < 0 || x2 > length || y2 > height) continue;
+                if (x2 < 0 || x2 > width || y2 > height) continue;
 
                 var targetNodeIndex = CoordinatesToIndex(x2, y2);
                 var edge = new EdgeDirected(nodes[currentNodeIndex], nodes[targetNodeIndex]);

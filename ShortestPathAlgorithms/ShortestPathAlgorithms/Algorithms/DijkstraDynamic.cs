@@ -19,7 +19,7 @@ public static class DijkstraDynamic<TState>
         };
         var nodesToExplore = new PriorityQueue(initialPriorities);
 
-        var result = Search(nodesToExplore, graph, costCalculator, startState);
+        var result = Search(nodesToExplore, graph, costCalculator, startState, to);
 
         if (!result.ContainsKey(to)) return null;
 
@@ -28,7 +28,7 @@ public static class DijkstraDynamic<TState>
         return path;
     }
 
-    private static Dictionary<INode, (INode? parent, double distance)> Search(PriorityQueue exploreQueue, GraphDirected graph, ICostCalculator<double, TState> costCalculator, TState startState)
+    private static Dictionary<INode, (INode? parent, double distance)> Search(PriorityQueue exploreQueue, GraphDirected graph, ICostCalculator<double, TState> costCalculator, TState startState, INode? to = null)
     {
         var visitedNodes = new Dictionary<INode, (INode? Parent, double Cost)>();
         var childToParentMap = new Dictionary<INode, INode>();
@@ -62,6 +62,8 @@ public static class DijkstraDynamic<TState>
                 ? (parent, distanceFromSource: costAccumulated)
                 : (null, distanceFromSource: costAccumulated);
             visitedNodes.Add(currentNode, parentAndCost);
+
+            if (to is not null && currentNode == to) break;
         }
 
         return visitedNodes;

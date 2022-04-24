@@ -31,10 +31,19 @@ public class GraphPrinter
 
     public static async Task PrintToFileWithCoordinatesAsync(IGraphDirected graph, string outputFilepath, IReadOnlyDictionary<INode, IPointCartesian> nodeToCoordinatesMap)
     {
-        var orderedNodes = graph.Nodes.OrderBy(n => n.Id);
-        var orderedEdges = graph.Edges
-            .OrderBy(e => e.From.Id)
-            .ThenBy(e => e.To.Id);
+        var areIdsIntegers = graph.Nodes.All(n => int.TryParse(n.Id, out _));
+
+        var orderedNodes = areIdsIntegers 
+            ? graph.Nodes.OrderBy(n => int.Parse(n.Id)) 
+            : graph.Nodes.OrderBy(n => n.Id);
+
+        var orderedEdges = areIdsIntegers
+            ? graph.Edges
+                .OrderBy(e => int.Parse(e.From.Id))
+                .ThenBy(e => int.Parse(e.To.Id))
+            : graph.Edges
+                .OrderBy(e => e.From.Id)
+                .ThenBy(e => e.To.Id);
 
         var fileStream = File.Open(outputFilepath, FileMode.Create);
         await using var file = new StreamWriter(fileStream);

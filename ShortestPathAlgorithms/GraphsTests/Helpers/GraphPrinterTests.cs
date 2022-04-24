@@ -27,7 +27,8 @@ namespace GraphsTests.Helpers
         {
             // Arrange
             var outputFilepath = Path.Combine(Path.GetTempPath(), $"rectangular_grid_graph_{DateTime.UtcNow.Ticks}.txt");
-            var (rectangularGridGraph, nodeToCoordinatesMap) = DirectedGraphFactory.CreateRectangularGrid(5, 5);
+            var (width, height) = (100, 100);
+            var (rectangularGridGraph, nodeToCoordinatesMap) = DirectedGraphFactory.CreateRectangularGrid(width, height);
 
             // Act
             await GraphPrinter.PrintToFileWithCoordinatesAsync(rectangularGridGraph, outputFilepath, nodeToCoordinatesMap);
