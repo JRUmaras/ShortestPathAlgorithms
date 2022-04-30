@@ -13,16 +13,22 @@ public class GraphDirected : IGraphDirected
 
     public INode[] Nodes => _nodes.Value;
 
+    public IReadOnlyDictionary<INode, IReadOnlyList<IEdgeDirected>> OutgoingEdgesTable { get; }
+
     public GraphDirected(IEnumerable<IEdgeDirected> edges)
     {
         if (edges is null) throw new ArgumentNullException($"Argument '{nameof(edges)}' cannot be null.");
         
         Edges = edges as EdgeDirectedWeighted[] ?? edges.ToArray();
         _nodes = new Lazy<INode[]>(GetNodes);
+
+        OutgoingEdgesTable = Edges
+            .GroupBy(e => e.From)
+            .ToDictionary(group => group.Key, group => (IReadOnlyList<IEdgeDirected>)group.ToList());
     }
 
     public IEnumerable<IEdgeDirected> FindOutgoingEdgesOfNode(INode node) 
-        => Edges.Where(e => e.From.Id == node.Id);
+        => OutgoingEdgesTable[node];
 
     private INode[] GetNodes()
     {
