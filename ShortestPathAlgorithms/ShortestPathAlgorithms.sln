@@ -9,7 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShortestPathAlgorithms", "S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShortestPathAlgorithmsTests", "ShortestPathAlgorithmsTests\ShortestPathAlgorithmsTests.csproj", "{2B316261-72E4-4BCA-AC44-07F2FD1A9BA9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphsTests", "GraphsTests\GraphsTests.csproj", "{6FD36764-5D95-413A-BBBE-8C58BEB0E3D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphsTests", "GraphsTests\GraphsTests.csproj", "{6FD36764-5D95-413A-BBBE-8C58BEB0E3D6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{256B9513-33EB-4BDD-A405-7CF6AE3BF520}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaConsoleApp", "SpaConsoleApp\SpaConsoleApp.csproj", "{475A6B98-CA65-4CC1-9F60-1F2FD95948E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,9 +37,16 @@ Global
 		{6FD36764-5D95-413A-BBBE-8C58BEB0E3D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FD36764-5D95-413A-BBBE-8C58BEB0E3D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6FD36764-5D95-413A-BBBE-8C58BEB0E3D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{475A6B98-CA65-4CC1-9F60-1F2FD95948E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{475A6B98-CA65-4CC1-9F60-1F2FD95948E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{475A6B98-CA65-4CC1-9F60-1F2FD95948E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{475A6B98-CA65-4CC1-9F60-1F2FD95948E5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{475A6B98-CA65-4CC1-9F60-1F2FD95948E5} = {256B9513-33EB-4BDD-A405-7CF6AE3BF520}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7349192E-1283-4854-88C1-348BEB6799AD}
