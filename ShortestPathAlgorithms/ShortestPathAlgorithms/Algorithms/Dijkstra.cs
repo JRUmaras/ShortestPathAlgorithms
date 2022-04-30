@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Graphs.Interfaces;
 using Graphs.Models;
+using ShortestPathAlgorithms.Helpers;
 using ShortestPathAlgorithms.Models;
-using PriorityQueue = ShortestPathAlgorithms.Helpers.PriorityQueue<Graphs.Interfaces.INode, int>;
+using PriorityQueue = ShortestPathAlgorithms.Helpers.CustomPriorityQueue<Graphs.Interfaces.INode, int>;
 
 namespace ShortestPathAlgorithms.Algorithms;
 
@@ -29,7 +30,7 @@ public static class Dijkstra
     }
 
     private static Dictionary<INode, (INode? parent, int distance)> Search(
-        PriorityQueue exploreQueue, 
+        IPriorityQueue<INode, int> exploreQueue, 
         Func<INode, IEnumerable<IEdgeDirectedWeighted>> getNodeEdges)
     {
         var visitedNodes = new Dictionary<INode, (INode? parent, int distance)>();

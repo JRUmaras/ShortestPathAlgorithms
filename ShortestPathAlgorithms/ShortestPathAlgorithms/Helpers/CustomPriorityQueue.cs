@@ -4,8 +4,7 @@ using System.Linq;
 
 namespace ShortestPathAlgorithms.Helpers;
 
-public class PriorityQueue<TElement, TPriority> 
-    where TElement :  IEquatable<TElement>
+public class CustomPriorityQueue<TElement, TPriority> : IPriorityQueue<TElement, TPriority> where TElement :  IEquatable<TElement>
     where TPriority :  IComparable<TPriority>
 {
     private readonly Dictionary<TElement, TPriority> _priorityDict;
@@ -13,7 +12,7 @@ public class PriorityQueue<TElement, TPriority>
 
     public bool IsEmpty => _priorityDict.Count == 0;
 
-    public PriorityQueue(IEnumerable<(TElement element, TPriority priority)>? elementsAndPriorities = null)
+    public CustomPriorityQueue(IEnumerable<(TElement element, TPriority priority)>? elementsAndPriorities = null)
     {
         if (elementsAndPriorities is null)
         {

@@ -4,8 +4,9 @@ using System.Linq;
 using Graphs.Interfaces;
 using Graphs.Models;
 using ShortestPathAlgorithms.CostCalculators.Interfaces;
+using ShortestPathAlgorithms.Helpers;
 using ShortestPathAlgorithms.Models;
-using PriorityQueue = ShortestPathAlgorithms.Helpers.PriorityQueue<Graphs.Interfaces.INode, double>;
+using PriorityQueue = ShortestPathAlgorithms.Helpers.CustomPriorityQueue<Graphs.Interfaces.INode, double>;
 
 namespace ShortestPathAlgorithms.Algorithms;
 
@@ -28,7 +29,7 @@ public static class DijkstraDynamic<TState>
         return path;
     }
 
-    private static Dictionary<INode, (INode? parent, double distance)> Search(PriorityQueue exploreQueue, GraphDirected graph, ICostCalculator<double, TState> costCalculator, TState startState, INode? to = null)
+    private static Dictionary<INode, (INode? parent, double distance)> Search(IPriorityQueue<INode, double> exploreQueue, GraphDirected graph, ICostCalculator<double, TState> costCalculator, TState startState, INode? to = null)
     {
         var visitedNodes = new Dictionary<INode, (INode? Parent, double Cost)>();
         var childToParentMap = new Dictionary<INode, INode>();
