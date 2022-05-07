@@ -57,8 +57,6 @@ public class CustomPriorityQueue<TElement, TPriority> : IPriorityQueue<TElement,
         return (dequeued.Key, dequeued.Value);
     }
 
-    public TPriority GetPriority(TElement element) => _priorityDict[element];
-
     public bool TryGetPriority(TElement element, out TPriority? priority) => _priorityDict.TryGetValue(element, out priority);
 
     private void ResetNextToDequeue()
