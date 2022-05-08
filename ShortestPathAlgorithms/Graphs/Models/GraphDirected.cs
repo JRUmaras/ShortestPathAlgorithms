@@ -27,8 +27,12 @@ public class GraphDirected : IGraphDirected
             .ToDictionary(group => group.Key, group => (IReadOnlyList<IEdgeDirected>)group.ToList());
     }
 
-    public IEnumerable<IEdgeDirected> FindOutgoingEdgesOfNode(INode node) 
-        => OutgoingEdgesTable[node];
+    public IEnumerable<IEdgeDirected> FindOutgoingEdgesOfNode(INode node)
+    {
+        return OutgoingEdgesTable.TryGetValue(node, out var edges)
+            ? edges
+            : Enumerable.Empty<IEdgeDirected>();
+    }
 
     private INode[] GetNodes()
     {

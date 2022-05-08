@@ -2,7 +2,7 @@
 
 namespace Graphs.Models;
 
-internal class EdgeDirected : IEdgeDirected
+public class EdgeDirected : IEdgeDirected
 {
     private string? _id;
 

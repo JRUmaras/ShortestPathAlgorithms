@@ -8,7 +8,7 @@ using ShortestPathAlgorithms.CostCalculators;
 using ShortestPathAlgorithms.Interfaces;
 using ShortestPathAlgorithms.Models;
 
-const int gridSize = 500;
+const int gridSize = 800;
 
 var (graph, nodeToCoordinatesMap) = DirectedGraphFactory.CreateRectangularGrid(gridSize, gridSize);
 
