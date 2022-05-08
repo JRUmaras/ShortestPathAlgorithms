@@ -18,7 +18,8 @@ public static class DijkstraDynamic<TState>
         {
             (from, 0)
         };
-        var nodesToExplore = new PriorityQueue(initialPriorities);
+        var nodesToExplore =  new PriorityQueue(initialPriorities);
+        //var nodesToExplore = new PriorityQueueNetWrapper<INode, double>(initialPriorities);
 
         var result = Search(nodesToExplore, graph, costCalculator, startState, to);
 
@@ -52,6 +53,7 @@ public static class DijkstraDynamic<TState>
 
                 var (stepCost, newState) = costCalculator.Calculate(edge, state);
                 var cost = costAccumulated + stepCost;
+                if (cost < costAccumulated) throw new Exception("wtf");
                 if (exploreQueue.TryGetPriority(edge.To, out var costOld) && cost >= costOld) continue;
                 exploreQueue.PushOrUpdate(edge.To, cost);
                 childToParentMap[edge.To] = currentNode;
