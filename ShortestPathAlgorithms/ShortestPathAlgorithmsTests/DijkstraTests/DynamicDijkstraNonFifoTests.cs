@@ -14,11 +14,11 @@ using Xunit;
 
 namespace ShortestPathAlgorithmsTests.DijkstraTests;
 
-public class DynamicDijkstraTests : IClassFixture<SimpleDynamicGraphFixture>
+public class DynamicDijkstraNonFifoTests : IClassFixture<SimpleDynamicGraphFixture>
 {
     private readonly SimpleDynamicGraphFixture _fixture;
 
-    public DynamicDijkstraTests(SimpleDynamicGraphFixture fixture)
+    public DynamicDijkstraNonFifoTests(SimpleDynamicGraphFixture fixture)
     {
         _fixture = fixture;
     }
@@ -36,7 +36,7 @@ public class DynamicDijkstraTests : IClassFixture<SimpleDynamicGraphFixture>
         var state = _fixture.StartState;
 
         // Act
-        var path = DijkstraDynamic<IState>.Find(graph, start, end, costCalc, state);
+        var path = DijkstraDynamicNonFifo<IState>.Find(graph, start, end, costCalc, state);
 
         // Assert
         Assert.NotNull(path);
@@ -55,7 +55,7 @@ public class DynamicDijkstraTests : IClassFixture<SimpleDynamicGraphFixture>
         // Act
         var startNode = graph.Nodes.First(n => n.Id == "7");
         var endNode = graph.Nodes.First(n => n.Id == "6");
-        var path = DijkstraDynamic<IState>.Find(graph, startNode, endNode, costCalculator, _fixture.StartState);
+        var path = DijkstraDynamicNonFifo<IState>.Find(graph, startNode, endNode, costCalculator, _fixture.StartState);
         
         // Assert
         Assert.NotNull(path);
@@ -73,7 +73,7 @@ public class DynamicDijkstraTests : IClassFixture<SimpleDynamicGraphFixture>
         // Act
         var startNode = graph.Nodes.First(n => n.Id == "0");
         var endNode = graph.Nodes.First(n => n.Id == "5");
-        var path = DijkstraDynamic<IState>.Find(graph, startNode, endNode, costCalculator, _fixture.StartState);
+        var path = DijkstraDynamicNonFifo<IState>.Find(graph, startNode, endNode, costCalculator, _fixture.StartState);
         
         // Assert
         Assert.Null(path);
@@ -89,7 +89,7 @@ public class DynamicDijkstraTests : IClassFixture<SimpleDynamicGraphFixture>
         // Act
         var startNode = graph.Nodes.First(n => n.Id == "1");
         var endNode = graph.Nodes.First(n => n.Id == "0");
-        var path = DijkstraDynamic<IState>.Find(graph, startNode, endNode, costCalculator, _fixture.StartState);
+        var path = DijkstraDynamicNonFifo<IState>.Find(graph, startNode, endNode, costCalculator, _fixture.StartState);
         
         // Assert
         Assert.Null(path);
@@ -97,7 +97,7 @@ public class DynamicDijkstraTests : IClassFixture<SimpleDynamicGraphFixture>
 
     [Fact]
     // Non-FIFO links mean that sub-paths are not optimal themselves
-    public void Find_NonFifoLinks_ShouldFindSubOptimalSolution()
+    public void Find_NonFifoLinks_ShouldFindSolution()
     {
         // Arrange
         var nodes = new[]
@@ -149,22 +149,20 @@ public class DynamicDijkstraTests : IClassFixture<SimpleDynamicGraphFixture>
         var endNode = graph.Nodes.First(n => n.Id == "3");
         var startState = new State { Time = DateTime.UtcNow.Date };
 
-        var actualShortestPath = nodes;
-        const int actualShortestPathCost = 3;
-        const int expectedAlgorithmShortestPathCost = 4;
-
         // Act
-        var path = DijkstraDynamic<IState>.Find(graph, startNode, endNode, costCalculatorMock.Object, startState);
+        var path = DijkstraDynamicNonFifo<IState>.Find(graph, startNode, endNode, costCalculatorMock.Object, startState);
 
         // Assert
         Assert.NotNull(path);
 
-        Assert.Equal(expectedAlgorithmShortestPathCost, path!.Cost);
+        var calculatedPathCosts = PathSimulator.Simulate(path!.Nodes, graph, costCalculatorMock.Object, startState);
+        var expectedPathCosts = PathSimulator.Simulate(nodes, graph, costCalculatorMock.Object, startState);
+        Assert.Equal(calculatedPathCosts.Sum(), path.Cost);
+        Assert.Equal(expectedPathCosts.Sum(), path.Cost);
 
-        var calculatedPathCosts = PathSimulator.Simulate(path.Nodes, graph, costCalculatorMock.Object, startState);
-        var actualShortestPathCosts = PathSimulator.Simulate(actualShortestPath, graph, costCalculatorMock.Object, startState);
-        Assert.Equal(expectedAlgorithmShortestPathCost, calculatedPathCosts.Sum());
-        Assert.Equal(actualShortestPathCost, actualShortestPathCosts.Sum());
+        Assert.Equal(4, path.Nodes.Count);
+        Assert.Equal(3, path.Cost);
+        Assert.Equal(nodes, path.Nodes);
     }
 
     private static Mock<ICostCalculator<double, IState>> UnitCostCalculatorMock()

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Graphs.Interfaces;
 using Graphs.Models;
 using ShortestPathAlgorithms.CostCalculators.Interfaces;
 using ShortestPathAlgorithms.Helpers;
 using ShortestPathAlgorithms.Models;
-using PriorityQueue = ShortestPathAlgorithms.Helpers.CustomPriorityQueue<Graphs.Interfaces.INode, double>;
 
 namespace ShortestPathAlgorithms.Algorithms;
 
@@ -15,11 +15,10 @@ public static class DijkstraDynamic<TState>
     public static Path<double>? Find(GraphDirected graph, INode from, INode to, ICostCalculator<double, TState> costCalculator, TState startState)
     {
         var initialPriorities = new List<(INode element, double priority)>
-        {
-            (from, 0)
-        };
-        var nodesToExplore =  new PriorityQueue(initialPriorities);
-        //var nodesToExplore = new PriorityQueueNetWrapper<INode, double>(initialPriorities);
+            {
+                (from, 0)
+            };
+        var nodesToExplore = new PriorityQueueNetWrapper<INode, double>(initialPriorities);
 
         var result = Search(nodesToExplore, graph, costCalculator, startState, to);
 
@@ -53,7 +52,9 @@ public static class DijkstraDynamic<TState>
 
                 var (stepCost, newState) = costCalculator.Calculate(edge, state);
                 var cost = costAccumulated + stepCost;
-                if (cost < costAccumulated) throw new Exception("wtf");
+                
+                Debug.Assert(cost >= costAccumulated, "Path cost got reduced when performing Dijkstra algorithm.");
+
                 if (exploreQueue.TryGetPriority(edge.To, out var costOld) && cost >= costOld) continue;
                 exploreQueue.PushOrUpdate(edge.To, cost);
                 childToParentMap[edge.To] = currentNode;
@@ -71,7 +72,7 @@ public static class DijkstraDynamic<TState>
 
         return visitedNodes;
     }
-    
+
     private static Path<double> Backtrack(INode endNode, IReadOnlyDictionary<INode, (INode? Parent, double Cost)> pathTable)
     {
         var path = new Stack<INode>();
